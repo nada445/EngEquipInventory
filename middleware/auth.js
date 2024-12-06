@@ -1,4 +1,4 @@
-const db = require('../DataBase/db');
+const db = require('../connectors/db');
 
 async function GetUser(query){
     try{
