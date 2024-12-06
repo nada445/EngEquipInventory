@@ -1,4 +1,4 @@
-const db = require('../DataBase/db');
+const db = require('../connectors/db');
 
 async function GetUser(query){
     try{
@@ -17,7 +17,7 @@ async function Authenticate(req, res, next){
     const token= req.header('authorization');
 
     if(!token){
-        res.status(401).send('Access denied, no token provided');
+        res.status(401).send('hello');
     }
 
     try{
