@@ -1,6 +1,6 @@
-const db = require('./connectors/db');
+const db = require('../../connectors/db');
 
-const { Authenticate, AuthorizedStandardUser, GetUser } = require('../middleware/auth'); 
+const { Authenticate, AuthorizedStandardUser, GetUser } = require('../../middleware/auth'); 
 
 function handleStandardUserBackendApi(app) {
 
@@ -33,3 +33,4 @@ function handleStandardUserBackendApi(app) {
     }
     )
 }
+module.exports = {handleStandardUserBackendApi};

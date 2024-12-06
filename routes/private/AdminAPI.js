@@ -1,6 +1,6 @@
-const db = require('/connectors/db');
+const db = require('../../connectors/db');
 
-const { Authenticate, AuthorizedAdmin } = require('../middleware/auth'); 
+const { Authenticate, AuthorizedAdmin } = require('../../middleware/auth'); 
 
 function handleAdminBackendApi(app) {
 
@@ -9,3 +9,4 @@ function handleAdminBackendApi(app) {
 
 
 }
+module.exports = {handleAdminBackendApi};
