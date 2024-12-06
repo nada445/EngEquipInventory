@@ -4,6 +4,7 @@ const { Authenticate, AuthorizedStandardUser, GetUser } = require('../../middlew
 
 function handleStandardUserBackendApi(app) {
 
+     
     app.post('/api/v1/rating/new', Authenticate, AuthorizedStandardUser, GetUser, async(req,res) => {
 
         
@@ -11,7 +12,7 @@ function handleStandardUserBackendApi(app) {
     }
     )
 
-
+    
     app.post('/api/v1/cart/new', Authenticate, AuthorizedStandardUser, GetUser, async(req,res) => {
 
         
