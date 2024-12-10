@@ -1,21 +1,20 @@
 const express = require ('express');
 const app = express();
-
+const bodyParser = require("body-parser");
 const {handleAdminBackendApi}= require('./routes/private/AdminAPI');
 const {HandlePublicBackendApi}= require('./routes/public/API');
 const {handleStandardUserBackendApi}= require('./routes/private/UserAPI');
-const {GetUser, Authenticate, AuthorizedAdmin, AuthorizedStandardUser}= require('./middleware/auth.js');
+const {authMiddleware, AuthorizedAdmin, AuthorizedStandardUser}= require('./middleware/auth.js');
 
-app.use(Authenticate);
+//app.use(Authenticate);
+app.use(bodyParser.json());
 
 HandlePublicBackendApi(app);
-
-app.use(Authenticate, AuthorizedAdmin);
+app.use(authMiddleware);
+app.use(authMiddleware, AuthorizedAdmin);
 
 handleAdminBackendApi(app);
-
-app.use(Authenticate, AuthorizedStandardUser);
-
+app.use(authMiddleware, AuthorizedStandardUser);
 handleStandardUserBackendApi(app);
 
 app.get('/', (req, res)=>

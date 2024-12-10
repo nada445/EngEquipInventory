@@ -1,36 +1,10 @@
 const db = require('../../connectors/db');
 
-const { Authenticate, AuthorizedStandardUser, GetUser } = require('../../middleware/auth'); 
+const {authMiddleware, AuthorizedStandardUser} = require('../../middleware/auth'); 
 
 function handleStandardUserBackendApi(app) {
 
-    app.post('/api/v1/rating/new', Authenticate, AuthorizedStandardUser, GetUser, async(req,res) => {
-
-        
-
-    }
-    )
-
-
-    app.post('/api/v1/cart/new', Authenticate, AuthorizedStandardUser, GetUser, async(req,res) => {
-
-        
-
-    }
-    )
-
-    app.delete('/api/v1/cart/delete/:cartId', Authenticate, AuthorizedStandardUser, GetUser, async(req,res) => {
-
-        
-
-    }
-    )
-
-    app.post('/api/v1/order/new', Authenticate, AuthorizedStandardUser, GetUser, async(req,res) => {
-
-        
-
-    }
-    )
+     
+    
 }
 module.exports = {handleStandardUserBackendApi};
