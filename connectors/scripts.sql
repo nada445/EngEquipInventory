@@ -60,3 +60,11 @@ CREATE TABLE "SEproject".equipment_order (
     quantity INTEGER NOT NULL,
     PRIMARY KEY (order_ID, equipment_ID)
 );
+
+create table if not exists "SEproject"."session"
+(
+    "id" serial primary key,
+    "userId" integer not null,
+    "token" text not null,
+    "expiresAt" timestamp not null
+);

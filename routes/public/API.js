@@ -1,6 +1,6 @@
 const db = require('../../connectors/db');
 
-const { Authenticate} = require('../../middleware/auth');
+const {authMiddleware} = require('../../middleware/auth');
 const { v4 } = require('uuid');
 const bcrypt = require('bcrypt');
 
@@ -25,14 +25,15 @@ function HandlePublicBackendApi(app){
       return res.status(400).send('user does not exist');
     }
     user = user[0];
-    bcrypt.compare(password, user.password, (err, result) => {
+    await bcrypt.compare(password, user.password, (err, result) => {
       if (err) {
         console.error('Error comparing password:', err);
+        return res.status(400).send('Could not register user');
       } else if (!result) {
         return res.status(400).send('Password does not match');
       }
-      }
-  
+    }
+    )
     // set the expiry time as 30 minutes after the current time
     const token = v4();
     const currentDateTime = new Date();
@@ -66,7 +67,7 @@ function HandlePublicBackendApi(app){
             newUser.password = await bcrypt.hash(newUser.password, 10);
             const user = await db('SEproject.users').insert(newUser).returning('*');
             console.log("user new",user);
-            return res.status(200).json(user);
+            return res.status(200).json("User registerd succefully");
           } catch (e) {
             console.log(e.message);
             return res.status(400).send('Could not register user');
