@@ -12,23 +12,7 @@ function handleAdminBackendApi(app) {
           return res.status(400).send(err.message);
         }
       });
-      app.put('/employee/:id', async (req, res)=> {
     
-        try {
-          
-          const {username ,role } = req.body;
-          const query = `update "SEproject"."users"
-                             set username = '${username}',
-                             role = '${role}'
-                             where id = ${req.params.id}`
-          const result = await db.raw(query);
-          return res.status(200).send("updated succesfully");
-        } catch (err) {
-          return res.status(400).send("failed to update employee");
-        }
-
-      
-      });
       app.delete('/api/v1/users/:id', async (req, res)=> {
     
         try {

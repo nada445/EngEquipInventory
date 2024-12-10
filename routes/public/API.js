@@ -25,6 +25,7 @@ function HandlePublicBackendApi(app){
       return res.status(400).send('user does not exist');
     }
     user = user[0];
+    console.log(user)
     await bcrypt.compare(password, user.password, (err, result) => {
       if (err) {
         console.error('Error comparing password:', err);
@@ -41,18 +42,20 @@ function HandlePublicBackendApi(app){
 
     // create a session containing information about the user and expiry time
     const session = {
-      userId: user.id,
+      userId: user.user_id,
       token,
       expiresAt,
     };
     try {
-      await db('SEproject.Session').insert(session);
+      await db('SEproject.session').insert(session);
+      console.log(session)
       // In the response, set a cookie on the client with the name "session_cookie"
       // and the value as the UUID we generated. We also set the expiration time.
       return res.cookie("session_token", token, { expires: expiresAt }).status(200).send('login successful');
     } catch (e) {
       console.log(e.message);
-      return res.status(400).send('Could not register user');
+      console.log(session)
+      return res.status(400).send('Could not here register user');
     }
   });
  app.post('/api/v1/user/new', async function(req, res) {
