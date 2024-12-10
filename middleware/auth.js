@@ -58,19 +58,26 @@ async function authMiddleware(req, res, next) {
 }*/
 
 async function AuthorizedAdmin(req, res, next){
-
+try {
     if(req.User.role !== 'admin'){
         return res.status(400).send('Access denied. ONLY ADMINS have permission to perform this action.');
     }
-    next();
+} catch (error) {
+    next();  
+}
+   
+  
 }
 
 async function AuthorizedStandardUser(req, res, next){
 
-    if(req.User.role != 'standard_user'){
-        return res.status(400).send('Access denied. ONLY STANDARD USERS have permission to perform this action.');
+    try {
+        if(req.User.role !== 'standerduser'){
+            return res.status(400).send('Access denied. ONLY ADMINS have permission to perform this action.');
+        }
+    } catch (error) {
+        next();  
     }
-    next();
 }
 
 module.exports = {authMiddleware , AuthorizedAdmin, AuthorizedStandardUser, authMiddleware};

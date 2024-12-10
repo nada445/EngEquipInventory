@@ -10,9 +10,8 @@ const {authMiddleware, AuthorizedAdmin, AuthorizedStandardUser}= require('./midd
 app.use(bodyParser.json());
 
 HandlePublicBackendApi(app);
-app.use(authMiddleware);
-app.use(authMiddleware, AuthorizedAdmin);
 
+app.use(authMiddleware, AuthorizedAdmin);
 handleAdminBackendApi(app);
 app.use(authMiddleware, AuthorizedStandardUser);
 handleStandardUserBackendApi(app);
