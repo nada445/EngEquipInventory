@@ -25,20 +25,19 @@ function HandlePublicBackendApi(app){
       return res.status(400).send('user does not exist');
     }
     user = user[0];
-    console.log(user)
-    await bcrypt.compare(password, user.password, (err, result) => {
-      if (err) {
-        console.error('Error comparing password:', err);
-        return res.status(400).send('Could not register user');
-      } else if (!result) {
+  
+      // Compare password using bcrypt asynchronously
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) {
         return res.status(400).send('Password does not match');
       }
-    }
-    )
+  
+
+   
     // set the expiry time as 30 minutes after the current time
     const token = v4();
     const currentDateTime = new Date();
-    const expiresAt = new Date(+currentDateTime + 18000000); // expire in 3 minutes
+    const expiresAt = new Date(currentDateTime.getTime() + 18000000); // expire in 3 minutes
 
     // create a session containing information about the user and expiry time
     const session = {
@@ -48,16 +47,19 @@ function HandlePublicBackendApi(app){
     };
     try {
       await db('SEproject.session').insert(session);
-      console.log(session)
       // In the response, set a cookie on the client with the name "session_cookie"
       // and the value as the UUID we generated. We also set the expiration time.
-      return res.cookie("session_token", token, { expires: expiresAt }).status(200).send('login successful');
-    } catch (e) {
+      res.cookie("session_token", token, { expires: expiresAt, httpOnly: true })
+        .status(200)
+        .send('Login successful');
+      } catch (e) {
       console.log(e.message);
-      console.log(session)
       return res.status(400).send('Could not here register user');
+
     }
-  });
+  }
+  );
+  console.log("here1");
  app.post('/api/v1/user/new', async function(req, res) {
           const userExists = await db.select('*').from('SEproject.users').where('email', req.body.email);
           console.log("UE",userExists)

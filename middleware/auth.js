@@ -21,6 +21,17 @@ async function authMiddleware(req, res, next) {
       console.log("expired session");
       return res.status(301).redirect('/');
     }
+    const user = await db.select('user_id', 'role').from('SEproject.users').where('user_id', userSession.userId).first();
+    
+    if (!user) {
+        console.log("user not found");
+        return res.status(301).redirect('/');
+    }
+
+    // Attach user details to req.user for later use
+    req.user = user;
+    
+    // Proceed to next middleware or route handler
   
     // If all checks have passed, we can consider the user authenticated
     next();
@@ -59,12 +70,12 @@ async function authMiddleware(req, res, next) {
 
 async function AuthorizedAdmin(req, res, next){
 try {
-    if(req.User.role !== 'admin'){
+    if(req.user.role !== 'admin'){
         return res.status(400).send('Access denied. ONLY ADMINS have permission to perform this action.');
     }
 } catch (error) {
-    next();  
 }
+    next();  
    
   
 }
@@ -72,12 +83,13 @@ try {
 async function AuthorizedStandardUser(req, res, next){
 
     try {
-        if(req.User.role !== 'standerduser'){
+        if(req.user.role !== 'standerduser'){
             return res.status(400).send('Access denied. ONLY ADMINS have permission to perform this action.');
         }
     } catch (error) {
-        next();  
-    }
+         }
+              next();  
+    
 }
 
 module.exports = {authMiddleware , AuthorizedAdmin, AuthorizedStandardUser, authMiddleware};

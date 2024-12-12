@@ -30,11 +30,9 @@ async function getUser(req) {
   const user = await db.select('*')
     .from({ s: 'SEproject.session' })
     .where('token', sessionToken)
-    .innerJoin('SEproject.user as u', 's.user_ID', 'u.id')
+    .innerJoin('SEproject.user as u', 's.userId', 'u.id')
     .first(); 
 
-  
-  console.log('user =>', user)
   return user;  
 }
 
