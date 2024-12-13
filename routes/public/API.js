@@ -72,7 +72,7 @@ function HandlePublicBackendApi(app){
             newUser.password = await bcrypt.hash(newUser.password, 10);
             const user = await db('SEproject.users').insert(newUser).returning('*');
             console.log("user new",user);
-            return res.status(200).json("User registerd succefully");
+            return res.status(200).json('User registerd succefully');
           } catch (e) {
             console.log(e.message);
             return res.status(400).send('Could not register user');
