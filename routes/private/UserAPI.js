@@ -4,7 +4,7 @@ const {authMiddleware, AuthorizedStandardUser} = require('../../middleware/auth'
 
 function handleStandardUserBackendApi(app) {
 
-      app.get('/api/v1/equipment/view' , Authenticate, AuthorizedStandardUser, GetUser, async(req,res) => {
+      app.get('/api/v1/equipment/view' ,async(req,res) => {
         UserID= GetUser();
 
         try{

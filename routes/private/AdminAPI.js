@@ -39,7 +39,7 @@ function handleAdminBackendApi(app) {
         }
       
       })
- app.post('/api/v1/equipment/new', Authenticate, AuthorizedAdmin, GetUser, async(req,res) => {
+ app.post('/api/v1/equipment/new',  async(req,res) => {
         UserID= GetUser();
 
         const {equipmentID,equipment_name,equipment_img,rating,model_number,purchase_date,quantity,status,location,category_ID,supplier_id}= req.body;
@@ -58,7 +58,7 @@ function handleAdminBackendApi(app) {
 
     }
     )
-    app.put('/api/v1/equipment/:id', Authenticate, AuthorizedAdmin, GetUser, async(req,res) => {
+    app.put('/api/v1/equipment/:id', async(req,res) => {
         UserID= GetUser();
         try {
           const {rating , purchase_date, quantity,status,location} = req.body;
@@ -81,7 +81,7 @@ function handleAdminBackendApi(app) {
       
       })
 
-      app.delete('/api/v1/equipment/:id', Authenticate, AuthorizedAdmin, GetUser, async(req,res) => {
+      app.delete('/api/v1/equipment/:id',async(req,res) => {
     
         try {
           const query = `delete from "public"."equipments" where id=${req.params.id}`; //shcema name public , table is equipments
