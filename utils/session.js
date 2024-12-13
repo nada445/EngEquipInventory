@@ -2,7 +2,7 @@ const db = require('../connectors/db');
 
 function getSessionToken(req) {
   
-  //console.log("cookie",req.headers.cookie);
+  console.log("cookie",req.headers.cookie);
   if(!req.headers.cookie){
     return null
   }

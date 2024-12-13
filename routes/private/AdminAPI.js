@@ -1,6 +1,7 @@
 const db = require('../../connectors/db');
 
-const { Authenticate, AuthorizedAdmin } = require('../../middleware/auth'); 
+const { authMiddleware, AuthorizedAdmin } = require('../../middleware/auth'); 
+const { getSessionToken, getUser} = require('../../utils/session'); 
 
 function handleAdminBackendApi(app) {
     app.get('/api/v1/users/view' , async function(req , res) {
@@ -38,15 +39,29 @@ function handleAdminBackendApi(app) {
           return res.status(400).send("failed to delete employee");
         }
       
-      })
+      });
+      app.put('/api/v1/users/:id' , async (req , res) => {
+        try{
+          const {username , role} = req.body;
+          const query = `update "SEproject"."users"
+          set username = '${username}',
+          role = '${role}'
+          where user_ID = ${req.params.id}`;
+          const result = await db.raw(query);
+          return res.status(200).send("Updated succesfully");
+        }catch(err){
+            console.log("error message",err.message);
+            return res.status(400).send('could not update');
+        }
+      }); 
  app.post('/api/v1/equipment/new',  async(req,res) => {
-        UserID= GetUser();
+      //  UserID= getUser().userId;
 
         const {equipmentID,equipment_name,equipment_img,rating,model_number,purchase_date,quantity,status,location,category_ID,supplier_id}= req.body;
 
         try{
-            const result = await db.raw(`INSERT INTO "equipments" (equipmentID,equipment_name,equipment_img,rating,model_number,purchase_date,quantity,status,location,category_ID,supplier_id) 
-            VALUES ('${equipmentID}', '${equipment_name}','${equipment_img}','${rating}','${model_number}','${purchase_date}','${quantity}','${status}','${location}','${category_ID}','${supplier_id}');`);
+            const result = await db.raw(`INSERT INTO "SEproject".equipments (equipment_name,equipment_img,rating,model_number,purchase_date,quantity,status,location,category_ID,supplier_id) 
+            VALUES ('${equipment_name}','${equipment_img}','${rating}','${model_number}','${purchase_date}','${quantity}','${status}','${location}','${category_ID}','${supplier_id}');`);
 
         return res.status(201).json({ message: "Successfully added equipment", rating: result.rows[0] });
         }
@@ -59,18 +74,18 @@ function handleAdminBackendApi(app) {
     }
     )
     app.put('/api/v1/equipment/:id', async(req,res) => {
-        UserID= GetUser();
+   
         try {
           const {rating , purchase_date, quantity,status,location} = req.body;
           //console.log(req.body,salary); 
           //schema name is public and table name is equipments
-          const query = `update "public"."equipments"     
+          const query = `update "SEproject"."equipments"     
                             set rating = '${rating}',
                             purchase_date = '${purchase_date}',
                             quantity = '${quantity}',
                             status = '${status}',
                             location = '${location}'
-                             where id = ${req.params.id}`
+                             where equipment_ID = ${req.params.id}`
           const result = await db.raw(query);
           return res.status(200).send("Updated succesfully");
         } 
@@ -84,12 +99,12 @@ function handleAdminBackendApi(app) {
       app.delete('/api/v1/equipment/:id',async(req,res) => {
     
         try {
-          const query = `delete from "public"."equipments" where id=${req.params.id}`; //shcema name public , table is equipments
+          const query = `delete from "SEproject"."equipments" where equipment_ID=${req.params.id}`; //shcema name public , table is equipments
           const result = await db.raw(query);
           return res.status(200).send("deleted succesfully");
         }
          catch (e) {
-          console.log("Error", err.message);
+          console.log("Error", e.message);
           return res.status(400).send("failed to delete equipment");
         }
       

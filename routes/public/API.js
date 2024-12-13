@@ -7,10 +7,10 @@ const bcrypt = require('bcrypt');
 function HandlePublicBackendApi(app){
   app.post('/api/v1/user/login', async function(req, res) {
     // get users credentials from the JSON body
-    const { email, password } = req.body
-    if (!email) {
+    const { username, password } = req.body
+    if (!username) {
       // If the email is not present, return an HTTP unauthorized code
-      return res.status(400).send('email is required');
+      return res.status(400).send('username is required');
     }
     if (!password) {
       // If the password is not present, return an HTTP unauthorized code
@@ -19,7 +19,7 @@ function HandlePublicBackendApi(app){
 
     // validate the provided password against the password in the database
     // if invalid, send an unauthorized code
-    let user = await db.select('*').from('SEproject.users').where('email', email);
+    let user = await db.select('*').from('SEproject.users').where('username', username);
 
     if (user.length == 0) {
       return res.status(400).send('user does not exist');
@@ -59,14 +59,16 @@ function HandlePublicBackendApi(app){
     }
   }
   );
-  console.log("here1");
+ // console.log("here1");
  app.post('/api/v1/user/new', async function(req, res) {
           const userExists = await db.select('*').from('SEproject.users').where('email', req.body.email);
-          console.log("UE",userExists)
+          const usernameExists = await db.select('*').from('SEproject.users').where('username', req.body.username);
           if (userExists.length > 0) {
             return res.status(400).send('user exists');
           }
-          
+          if (usernameExists.length > 0) {
+            return res.status(400).send('username is used pick a different one');
+          }
           try {
             const newUser = req.body;
             newUser.password = await bcrypt.hash(newUser.password, 10);

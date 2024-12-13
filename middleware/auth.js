@@ -1,5 +1,5 @@
 const db = require('../connectors/db');
-const {getSessionToken} = require('../utils/session');
+const {getSessionToken,getUser} = require('../utils/session');
 async function authMiddleware(req, res, next) {
     const sessionToken = getSessionToken(req);
     //console.log(sessionToken)
@@ -83,8 +83,8 @@ try {
 async function AuthorizedStandardUser(req, res, next){
 
     try {
-        if(req.user.role !== 'standerduser'){
-            return res.status(400).send('Access denied. ONLY ADMINS have permission to perform this action.');
+        if(req.user.role !== 'standerd_user'){
+            return res.status(400).send('Access denied. ONLY users have permission to perform this action.');
         }
     } catch (error) {
          }

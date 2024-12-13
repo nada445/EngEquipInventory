@@ -1,14 +1,15 @@
 const db = require('../../connectors/db');
 
 const {authMiddleware, AuthorizedStandardUser} = require('../../middleware/auth'); 
-
+const { getSessionToken, getUser} = require('../../utils/session'); 
 function handleStandardUserBackendApi(app) {
 
       app.get('/api/v1/equipment/view' ,async(req,res) => {
-        UserID= GetUser();
+        UserID= getUser().userId;
+        
 
         try{
-          const result = await db.raw(`SELECT equipment.*, categories.category_name, suppliers.supplier_name FROM equipment 
+          const result = await db.raw(`SELECT equipment.*, categories.category_name, suppliers.supplier_name FROM "SEproject".equipment 
             JOIN categories ON equipment.category_id = categories.category_id 
             JOIN suppliers ON equipment.supplier_id = suppliers.supplier_id;`
           );
