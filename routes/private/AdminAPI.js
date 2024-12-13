@@ -4,7 +4,7 @@ const { authMiddleware, AuthorizedAdmin } = require('../../middleware/auth');
 const { getSessionToken, getUser} = require('../../utils/session'); 
 
 function handleAdminBackendApi(app) {
-    app.get('/api/v1/users/view' , async function(req , res) {
+    app.get('/api/v1/users/view' , AuthorizedAdmin, async function(req , res) {
         try{
           const result = await db.raw(`select * from "SEproject"."users" order by user_id`);
           return res.status(200).send(result.rows);
@@ -14,7 +14,7 @@ function handleAdminBackendApi(app) {
         }
       });
     
-      app.delete('/api/v1/users/:id', async (req, res)=> {
+      app.delete('/api/v1/users/:id',AuthorizedAdmin, async (req, res)=> {
         const userId = req.params.id;
 
         const trx = await db.transaction();
@@ -40,7 +40,7 @@ function handleAdminBackendApi(app) {
         }
       
       });
-      app.put('/api/v1/users/:id' , async (req , res) => {
+      app.put('/api/v1/users/:id' ,AuthorizedAdmin, async (req , res) => {
         try{
           const {username , role} = req.body;
           const query = `update "SEproject"."users"
@@ -54,7 +54,7 @@ function handleAdminBackendApi(app) {
             return res.status(400).send('could not update');
         }
       }); 
- app.post('/api/v1/equipment/new',  async(req,res) => {
+ app.post('/api/v1/equipment/new',AuthorizedAdmin,  async(req,res) => {
       //  UserID= getUser().userId;
 
         const {equipmentID,equipment_name,equipment_img,rating,model_number,purchase_date,quantity,status,location,category_ID,supplier_id}= req.body;
@@ -73,7 +73,7 @@ function handleAdminBackendApi(app) {
 
     }
     )
-    app.put('/api/v1/equipment/:id', async(req,res) => {
+    app.put('/api/v1/equipment/:id', AuthorizedAdmin,async(req,res) => {
    
         try {
           const {rating , purchase_date, quantity,status,location} = req.body;
@@ -96,7 +96,7 @@ function handleAdminBackendApi(app) {
       
       })
 
-      app.delete('/api/v1/equipment/:id',async(req,res) => {
+      app.delete('/api/v1/equipment/:id',AuthorizedAdmin,async(req,res) => {
     
         try {
           const query = `delete from "SEproject"."equipments" where equipment_ID=${req.params.id}`; //shcema name public , table is equipments

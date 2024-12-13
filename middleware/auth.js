@@ -83,7 +83,7 @@ try {
 async function AuthorizedStandardUser(req, res, next){
 
     try {
-        if(req.user.role !== 'standerd_user'){
+        if(req.user.role !== 'standard_user'){
             return res.status(400).send('Access denied. ONLY users have permission to perform this action.');
         }
     } catch (error) {

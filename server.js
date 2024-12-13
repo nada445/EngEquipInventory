@@ -12,10 +12,7 @@ app.use(bodyParser.json());
 HandlePublicBackendApi(app);
 
 app.use(authMiddleware);
-app.use(AuthorizedAdmin);
 handleAdminBackendApi(app);
-app.use(authMiddleware)
-app.use(AuthorizedStandardUser);
 handleStandardUserBackendApi(app);
 
 app.get('/', (req, res)=>
