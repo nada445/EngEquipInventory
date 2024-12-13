@@ -26,7 +26,7 @@ CREATE TABLE if not exists "SEproject".equipments (
 
 CREATE TABLE if not exists "SEproject".users (
     user_ID SERIAL PRIMARY KEY,
-    username TEXT UNIQUE NOT NULL,
+    username TEXT NOT NULL,
     email TEXT UNIQUE NOT NULL,
     password TEXT NOT NULL, 
     role TEXT CHECK (role IN ('admin', 'standard_user')) NOT NULL,
