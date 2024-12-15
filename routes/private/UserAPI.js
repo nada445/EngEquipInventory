@@ -1,7 +1,8 @@
 const db = require('../../connectors/db');
 
 const {authMiddleware, AuthorizedStandardUser} = require('../../middleware/auth'); 
-const { getSessionToken, getUser} = require('../../utils/session'); 
+const { getSessionToken, getUserId, getUser} = require('../../utils/session'); 
+
 function handleStandardUserBackendApi(app) {
 
       app.get('/api/v1/equipment/view',AuthorizedStandardUser ,async(req,res) => {
