@@ -42,7 +42,7 @@ JOIN
     
       try {
         // Check if equipment exists
-        const equipmentExists = await db('public.equipments')
+        const equipmentExists = await db('SEproject.equipments')
           .where('equipment_id', equipment_id)
           .first(); // Retrieves the first match
     
@@ -51,7 +51,7 @@ JOIN
         }
     
         const query = 
-      `INSERT INTO "public"."rating" (user_id, equipment_id, comment, score)
+      `INSERT INTO "SEproject"."rating" (user_id, equipment_id, comment, score)
       VALUES ('${UserId}', '${equipment_id}', '${comment}', ${score});`;
 
       const result = await db.raw(query);
@@ -80,7 +80,7 @@ JOIN
       const UserId= await getUserId(req);
 
         try{
-                const equipment = await db('public.equipments')
+                const equipment = await db('SEproject.equipments')
                 .where('equipment_id', equipment_id)
                 .first();
 
@@ -112,18 +112,17 @@ JOIN
       const cartId = req.params.cartId;
 
       try{
-        const cart = await db('public.cart')
+        const cart = await db('SEproject.cart')
         .where('user_id' , UserId)
       .andWhere('cart_id', cartId)  // Check if the user owns the cart item
       .first();  // Get the first result, assuming cart_ID is unique per user
 
-      console.log(cart);
 
     if (!cart) {
       return res.status(404).send("Cart not found or you do not have permission to delete this item.");
     }
 
-        const result = await db('public.cart')
+        const result = await db('SEproject.cart')
         .where('user_id' , UserId)
       .andWhere('cart_id', cartId)  // Check if the user owns the cart item
       .del();  // Use `del()` to delete the record
@@ -157,7 +156,7 @@ JOIN
         try {
           // Step 2: Retrieve the user's cart
     
-            const cartItems = await trx('public.cart')
+            const cartItems = await trx('SEproject.cart')
             .where('user_id', UserId)
             .select('equipment_id', 'quantity'); // Ensure exact casing for column names
 
@@ -168,7 +167,7 @@ JOIN
           }
     
           // Step 3: Create a new order
-          const [orderIdObj] = await trx('public.orders')
+          const [orderIdObj] = await trx('SEproject.orders')
           .insert({ user_id: UserId })
           .returning('order_id');
 
@@ -180,12 +179,12 @@ JOIN
             quantity: item.quantity
           }));
 
-        await trx('public.equipment_order').insert(equipmentOrderData); // Bulk insert
+        await trx('SEproject.equipment_order').insert(equipmentOrderData); // Bulk insert
 
     
           // Step 5: Reduce equipment quantities in the `equipments` table
           for (const item of cartItems) {
-            const equipment = await trx('public.equipments')
+            const equipment = await trx('SEproject.equipments')
               .where('equipment_id', item.equipment_id)
               .select('quantity') // Get current stock
               .first();
@@ -196,7 +195,7 @@ JOIN
             }
     
             // Reduce the stock by the ordered quantity
-            await trx('public.equipments')
+            await trx('SEproject.equipments')
               .where('equipment_id', item.equipment_id)
               .update({
                 quantity: equipment.quantity - item.quantity
@@ -204,7 +203,7 @@ JOIN
           }
     
           // Step 6: Clear the user's cart
-          await trx('public.cart')
+          await trx('SEproject.cart')
             .where('user_id', UserId)
             .del(); // Delete all items from the cart for the user
     
@@ -225,7 +224,8 @@ JOIN
         console.error("Error:", err.message);
         return res.status(500).send("An unexpected error occurred.");
       }
-    });
+    }
+    )
     
     
 }
