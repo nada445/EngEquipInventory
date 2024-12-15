@@ -2,7 +2,9 @@ const db = require('../../connectors/db');
 
 const { authMiddleware, AuthorizedAdmin } = require('../../middleware/auth'); 
 const { getSessionToken, getUser} = require('../../utils/session'); 
-
+const multer = require('multer');
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 function handleAdminBackendApi(app) {
     app.get('/api/v1/users/view' , AuthorizedAdmin, async function(req , res) {
         try{
@@ -54,34 +56,47 @@ function handleAdminBackendApi(app) {
             return res.status(400).send('could not update');
         }
       }); 
- app.post('/api/v1/equipment/new',AuthorizedAdmin,  async(req,res) => {
-      //  UserID= getUser().userId;
-
-        const {equipmentID,equipment_name,equipment_img,rating,model_number,purchase_date,quantity,status,location,category_ID,supplier_id}= req.body;
-
-        try{
-            const result = await db.raw(`INSERT INTO "SEproject".equipments (equipment_name,equipment_img,rating,model_number,purchase_date,quantity,status,location,category_ID,supplier_id) 
-            VALUES ('${equipment_name}','${equipment_img}','${rating}','${model_number}','${purchase_date}','${quantity}','${status}','${location}','${category_ID}','${supplier_id}');`);
-
-        return res.status(201).json({ message: "Successfully added equipment", rating: result.rows[0] });
-        }
-        
-        catch(err){
+      app.post('/api/v1/equipment/new', AuthorizedAdmin, upload.single('image'), async (req, res) => {
+        const { equipment_name, model_number, purchase_date, quantity, status, location, category_ID, supplier_id } = req.body;
+    
+        try {
+            // Access the image binary data from req.file
+            const equipment_img = req.file ? req.file.buffer : null;
+    
+            // Insert data into the database
+            const result = await db.raw(`
+                INSERT INTO "SEproject".equipments 
+                (equipment_name, equipment_img, model_number, purchase_date, quantity, status, location, category_ID, supplier_id) 
+                VALUES 
+                (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) 
+                RETURNING *;`, 
+                [
+                    equipment_name,
+                    equipment_img,
+                    model_number,
+                    purchase_date,
+                    quantity,
+                    status,
+                    location,
+                    category_ID,
+                    supplier_id
+                ]
+            );
+    
+            return res.status(201).json({ message: "Successfully added equipment", equipment: result.rows[0] });
+        } catch (err) {
             console.error("Error adding equipment:", err.message);
-        return res.status(500).send("Failed to add equipment");
+            return res.status(500).send("Failed to add equipment");
         }
-
-    }
-    )
+    });
     app.put('/api/v1/equipment/:id', AuthorizedAdmin,async(req,res) => {
    
         try {
-          const {rating , purchase_date, quantity,status,location} = req.body;
+          const {purchase_date, quantity,status,location} = req.body;
           //console.log(req.body,salary); 
           //schema name is public and table name is equipments
           const query = `update "SEproject"."equipments"     
-                            set rating = '${rating}',
-                            purchase_date = '${purchase_date}',
+                            set purchase_date = '${purchase_date}',
                             quantity = '${quantity}',
                             status = '${status}',
                             location = '${location}'

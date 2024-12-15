@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Add new </title>
+    <link rel='stylesheet' href='/styles/bootstrap.min.css' />
+    <link rel='stylesheet' href='/styles/style.css' />
+    <script src="/js/jquery-2.2.0.min.js" type="text/javascript"></script>
+    <script src="/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="/src/equipment.js" type="text/javascript"></script>
+  </head>
+  <body>
+    <div>
+     <nav class="navbar navbar-inverse" style="padding-left:130px;">
+          <ul class="nav navbar-nav">
+            <li><a href="/">Home</a></li>
+            <li><a href="/search">Search</a></li>
+            <li><a href="/profile">Profile</a></li>
+            <li ><a href="/employee">Equipments</a></li>
+            <li class="active"><a href="/addEmployee">Add</a></li>
+          </ul>
+      </nav>
+  </div>
+    <br/>
+    <form class="form-horizontal" style="width: 80%;">
+      <div class="form-group">
+          <label for="ename" class="col-sm-2 control-label">Equipment Name</label>
+          <div class="col-sm-10">
+              <input type="text" class="form-control" id="ename" name="ename" placeholder="Equipment Name ..." value="" required >
+          </div>
+      </div>
+       <div class="form-group">
+          <label for="mo_num" class="col-sm-2 control-label">Model Number</label>
+          <div class="col-sm-10">
+              <input type="text" class="form-control" id="mo_num" name="mo_num" placeholder="model number..." value="" required >
+          </div>
+      </div>
+      <div class="form-group">
+          <label for="quantity" class="col-sm-2 control-label">Quantity</label>
+          <div class="col-sm-10">
+              <input type="text" class="form-control" id="quantity" name="quantity" placeholder="quantity..." value="" required >
+          </div>
+      </div>
+      <div class="form-group">
+          <label for="status" class="col-sm-2 control-label">Status</label>
+          <div class="col-sm-10">
+              <input type="text" class="form-control" id="status" name="status" placeholder="Status..." value="" required >
+          </div>
+      </div>
+      <div class="form-group">
+          <label for="cat_id" class="col-sm-2 control-label">Category ID</label>
+          <div class="col-sm-10">
+              <input type="text" class="form-control" id="cat_id" name="cat_id" placeholder="Category ID..." value="" required >
+          </div>
+      </div> 
+      <div class="form-group">
+          <label for="supp_id" class="col-sm-2 control-label">Supplier ID</label>
+          <div class="col-sm-10">
+              <input type="text" class="form-control" id="supp_id" name="supp_id" placeholder="Supplier ID..." value="" required >
+          </div>
+      </div>
+      <div class="form-group">
+          <label for="loc" class="col-sm-2 control-label">Location</label>
+          <div class="col-sm-10">
+              <input type="text" class="form-control" id="loc" name="loc" placeholder="location..." value="" required >
+          </div>
+      </div>
+      <div class="form-group">
+          <label for="pur_date" class="col-sm-2 control-label">Purchase Date</label>
+          <div class="col-sm-10">
+              <input type="date" class="form-control" id="pur_date" name="pur_date" placeholder="mm-dd-yyyy" value="" required>
+          </div>
+      </div>    
+      <div class="form-group">
+          <div class="col-sm-10 col-sm-offset-2">
+              <input id="submit" name="submit" type="button" value="Submit" class="btn btn-primary">
+          </div>
+      </div>
+  </form>
+    </div>
+  </body>
+  </html>
