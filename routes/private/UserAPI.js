@@ -29,7 +29,7 @@ JOIN
         }
       })
 
-      app.post('/api/v1/rating/new',checkUser, async (req, res) => {
+      app.post('/api/v1/rating/new', AuthorizedStandardUser, async (req, res) => {
       //await checkUser(req);
     
       const { equipment_id, comment, score } = req.body;  // Changed 'equipmentID' to 'equipment_id'
@@ -63,7 +63,7 @@ JOIN
     }
     )
 
-    app.post('/api/v1/cart/new', checkUser, async(req,res) => {
+    app.post('/api/v1/cart/new', AuthorizedStandardUser, async(req,res) => {
       //await checkUser(req);
 
       const { equipment_id, quantity}=req.body;
@@ -104,7 +104,7 @@ JOIN
     }
     )
 
-    app.delete('/api/v1/cart/delete/:cartId', checkUser, async(req,res) => {
+    app.delete('/api/v1/cart/delete/:cartId', AuthorizedStandardUser, async(req,res) => {
 
       //await checkUser(req);
       const UserId = await getUserId(req);
@@ -143,7 +143,7 @@ JOIN
     )
 
 
-    app.post('/api/v1/order/new', checkUser, async (req, res) => {
+    app.post('/api/v1/order/new', AuthorizedStandardUser, async (req, res) => {
       // Step 1: Authenticate the user
       //await checkUser(req); // Ensure only logged-in users can access this route
     
