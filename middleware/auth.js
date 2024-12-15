@@ -36,37 +36,9 @@ async function authMiddleware(req, res, next) {
     // If all checks have passed, we can consider the user authenticated
     next();
   };
-/*async function GetUser(query){
-    try{
-    const result= await db.raw(query);
 
-    return result.rows;
-    }
 
-    catch(error){
-        console.error("the user data wasn't found in the data base", error.message);
-    }
-}*/
 
-/*async function Authenticate(req, res, next){
-
-    const token= req.header('authorization');
-
-    if(!token){
-        return res.status(401).send('invailed tocken');
-    }
-
-    try{
-        decoded= JWT.verify(token, process.env.JWT_SECRET);
-        req.user= decoded;
-
-        next();
-    }
-
-    catch(EX){
-        return res.status(400).send('invalid token.');
-    }
-}*/
 
 async function AuthorizedAdmin(req, res, next){
 try {
@@ -92,4 +64,4 @@ async function AuthorizedStandardUser(req, res, next){
     
 }
 
-module.exports = {authMiddleware , AuthorizedAdmin, AuthorizedStandardUser, authMiddleware};
+module.exports = {authMiddleware , AuthorizedAdmin, AuthorizedStandardUser};
