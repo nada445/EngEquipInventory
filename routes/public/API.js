@@ -4,7 +4,7 @@ const {authMiddleware} = require('../../middleware/auth');
 const { v4 } = require('uuid');
 const bcrypt = require('bcrypt');
 
-function HandlePublicBackendApi(app){
+function HandleSEprojectBackendApi(app){
 
   app.post('/api/v1/user/login', async function(req, res) {
     // get users credentials from the JSON body
@@ -20,7 +20,7 @@ function HandlePublicBackendApi(app){
 
     // validate the provided password against the password in the database
     // if invalid, send an unauthorized code
-    let user = await db.select('*').from('public.users').where('username', username);
+    let user = await db.select('*').from('SEproject.users').where('username', username);
 
     if (user.length == 0) {
       return res.status(400).send('user does not exist');
@@ -47,7 +47,7 @@ function HandlePublicBackendApi(app){
       expiresAt,
     };
     try {
-      await db('public.session').insert(session);
+      await db('SEproject.session').insert(session);
       // In the response, set a cookie on the client with the name "session_cookie"
       // and the value as the UUID we generated. We also set the expiration time.
       res.cookie("session_token", token, { expires: expiresAt, httpOnly: true })
@@ -62,8 +62,8 @@ function HandlePublicBackendApi(app){
   )
  
   app.post('/api/v1/user/new', async function(req, res) {
-      const userExists = await db.select('*').from('public.users').where('email', req.body.email);
-      const usernameExists = await db.select('*').from('public.users').where('username', req.body.username);
+      const userExists = await db.select('*').from('SEproject.users').where('email', req.body.email);
+      const usernameExists = await db.select('*').from('SEproject.users').where('username', req.body.username);
       if (userExists.length > 0) {
         return res.status(400).send('user exists');
         }
@@ -73,7 +73,7 @@ function HandlePublicBackendApi(app){
       try {
         const newUser = req.body;
         newUser.password = await bcrypt.hash(newUser.password, 10);
-        const user = await db('public.users').insert(newUser).returning('*');
+        const user = await db('SEproject.users').insert(newUser).returning('*');
         console.log("user new",user);
         return res.status(200).send('User registerd succefully');
         } catch (e) {
@@ -89,7 +89,7 @@ function HandlePublicBackendApi(app){
       
       try{
 
-        const ratings = await db('public.rating')
+        const ratings = await db('SEproject.rating')
         .where('equipment_id', equipmentId) // Filter by equipment ID
         .select('user_id', 'comment', 'score'); 
 
@@ -116,4 +116,4 @@ function HandlePublicBackendApi(app){
   )  
 
 }
-module.exports = {HandlePublicBackendApi};
+module.exports = {HandleSEprojectBackendApi};
