@@ -78,7 +78,7 @@ function handleAdminBackendApi(app) {
         try {
           const {rating , purchase_date, quantity,status,location} = req.body;
           //console.log(req.body,salary); 
-          //schema name is public and table name is equipments
+          //schema name is SEproject and table name is equipments
           const query = `update "SEproject"."equipments"     
                             set rating = '${rating}',
                             purchase_date = '${purchase_date}',
@@ -99,7 +99,7 @@ function handleAdminBackendApi(app) {
       app.delete('/api/v1/equipment/:id',AuthorizedAdmin,async(req,res) => {
     
         try {
-          const query = `delete from "SEproject"."equipments" where equipment_ID=${req.params.id}`; //shcema name public , table is equipments
+          const query = `delete from "SEproject"."equipments" where equipment_ID=${req.params.id}`; //shcema name SEproject , table is equipments
           const result = await db.raw(query);
           return res.status(200).send("deleted succesfully");
         }
