@@ -2,7 +2,7 @@ const db = require('../connectors/db');
 
 function getSessionToken(req) {
   
-  console.log("cookie",req.headers.cookie);
+  //console.log("cookie",req.headers.cookie);
   if(!req.headers.cookie){
     return null
   }
@@ -30,12 +30,28 @@ async function getUser(req) {
   const user = await db.select('*')
     .from({ s: 'SEproject.session' })
     .where('token', sessionToken)
-    .innerJoin('SEproject.user as u', 's.userId', 'u.id')
+    .innerJoin('SEproject.users as u', 's.userId', 'u.user_id') // Ensure correct column names
     .first(); 
 
   return user;  
 }
 
+async function getUserId(req) {
+
+  const sessionToken = getSessionToken(req);
+  if (!sessionToken) {
+    console.log("no session token is found")
+    return res.status(301).redirect('/');
+  }
 
 
-module.exports = {getSessionToken , getUser};
+  const user = await db.select('*')
+    .from({ s: 'SEproject.session' })
+    .where('token', sessionToken)
+    .innerJoin('SEproject.users as u', 's.userId', 'u.user_id') // Ensure correct column names
+    .first(); 
+
+  return user.user_id;  
+}
+
+module.exports = {getSessionToken , getUser, getUserId};
