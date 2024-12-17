@@ -66,6 +66,24 @@ JOIN
     }
     )
 
+    app.get('/api/v1/cart/view', AuthorizedStandardUser, async(req, res)=>{
+
+      const User= await getUser(req);
+      const UserId = User.user_id;
+
+      try{
+        const query = `select * from "public"."cart" where user_id = ${UserId}`;
+      const result = await db.raw(query);
+
+        console.log(`Results`,result.rows);
+        return res.status(200).send(result.rows);
+      }catch(err){
+        console.log("Error",err.message);
+        return res.status(400).send(err.message);
+      }
+    }
+    )
+
     app.post('/api/v1/cart/new', AuthorizedStandardUser, async(req,res) => {
       //await checkUser(req);
 
@@ -145,6 +163,46 @@ JOIN
 
     }
     )
+
+    app.put('/api/v1/cart/edit/:cartId', AuthorizedStandardUser, async(req,res) =>{
+
+      const User= await getUser(req);
+      const UserId = User.user_id;
+      const cartId = req.params.cartId;
+      const {quantity} = req.body;
+
+      try{
+        const cart = await db('public.cart')
+        .where('user_id' , UserId)
+      .andWhere('cart_id', cartId)  // Check if the user owns the cart item
+      .first();
+
+      if (!cart) {
+        return res.status(404).send("Cart not found or you do not have permission to edit this item.");
+      }
+
+          const query = `
+          UPDATE "public"."cart"
+          SET quantity = '${quantity}'
+          WHERE user_ID = ${UserId} AND cart_ID = ${cartId};
+          `;
+          
+          const result = await db.raw(query);
+
+      if (result === 0) {
+          return res.status(404).send("Cart item not found.");
+      }
+      
+          return res.status(200).send("Successfully edited the cart item." );
+            }
+
+        catch(err){
+          console.log("couldn't edit item", err.message);
+          return res.status(500).send("Failed to edit item");     
+              }
+      
+    }
+  )
 
     app.post('/api/v1/order/new', AuthorizedStandardUser, async (req, res) => {
       const User= await getUser(req);
