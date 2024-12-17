@@ -1,25 +1,36 @@
-const express = require ('express');
+const express = require('express');
 const app = express();
 const bodyParser = require("body-parser");
-const {handleAdminBackendApi}= require('./routes/private/AdminAPI');
-const {HandlePublicBackendApi}= require('./routes/public/API');
-const {handleStandardUserBackendApi}= require('./routes/private/UserAPI');
-const {authMiddleware}= require('./middleware/auth.js');
+const {handlePrivateBackendApi} = require('./routes/private/api');
+const {handlePublicBackendApi} = require('./routes/public/api');
+const {handlePublicFrontEndView} = require('./routes/public/view');
+const {handlePrivateFrontEndView} = require('./routes/private/view');
 
+
+const {authMiddleware} = require('./middleware/auth');
+
+// view engine setup
+app.set('views', './views');
+app.set('view engine', 'hjs');
+app.use(express.static('./public'));
+
+// Handle post requests
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true}));
 
-HandlePublicBackendApi(app);
-
+handlePublicFrontEndView(app);
+handlePublicBackendApi(app);
 app.use(authMiddleware);
-handleStandardUserBackendApi(app);
-handleAdminBackendApi(app);
+handlePrivateFrontEndView(app);
+handlePrivateBackendApi(app);
 
-app.get('/', (req, res)=>
-{
-    res.send('A simple Node App is running on this server')
-    res.end();
-})
+app.listen(3000, () => {
+    console.log("Server is now listening at port 3000 on http://localhost:3000/");
+});
 
-const PORT = process.env.PORT|| 5000;
-app.listen(PORT, console.log(`server sterted on port ${PORT} on http://localhost:5000/`))
-//console.log("Server is now listening at port 5000 on http://localhost:5000/");
+
+
+
+
+
+
