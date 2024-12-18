@@ -1,4 +1,3 @@
-
 $(document).ready(function(){
     $("#submit").click(function() {
       const username = $('#username').val();

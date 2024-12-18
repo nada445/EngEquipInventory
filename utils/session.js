@@ -28,30 +28,14 @@ async function getUser(req) {
 
 
   const user = await db.select('*')
-    .from({ s: 'SEproject.session' })
+    .from({ s: 'public.session' })
     .where('token', sessionToken)
-    .innerJoin('SEproject.users as u', 's.userId', 'u.user_id') // Ensure correct column names
+    .innerJoin('public.users as u', 's.userId', 'u.user_id') // Ensure correct column names
     .first(); 
 
   return user;  
 }
 
-async function getUserId(req) {
-
-  const sessionToken = getSessionToken(req);
-  if (!sessionToken) {
-    console.log("no session token is found")
-    return res.status(301).redirect('/');
-  }
 
 
-  const user = await db.select('*')
-    .from({ s: 'SEproject.session' })
-    .where('token', sessionToken)
-    .innerJoin('SEproject.users as u', 's.userId', 'u.user_id') // Ensure correct column names
-    .first(); 
-
-  return user.user_id;  
-}
-
-module.exports = {getSessionToken , getUser, getUserId};
+module.exports = {getSessionToken , getUser};
