@@ -34,7 +34,7 @@ JOIN
       //await checkUser(req);
     
       const { equipment_id, comment, score } = req.body;  // Changed 'equipmentID' to 'equipment_id'
-      const UserId = await getUserId(req);
+      const UserId = await getUserId(req).user_id;
     
       if (!equipment_id || !score) {
         return res.status(400).send("Equipment ID and score are required.");
