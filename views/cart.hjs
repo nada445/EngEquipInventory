@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel='stylesheet' href='/styles/bootstrap.min.css' />
+    <link rel='stylesheet' href='/styles/style.css' />
+    <script src="/js/jquery-2.2.0.min.js" type="text/javascript"></script>
+    <script src="/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="/src/cart.js" type="text/javascript"></script>
+    <style>
+      input[type="text"] {
+        min-width: 30px; /* Minimum width */
+        text-align: center; /* Center-align text */
+        padding: 5px;
+        font-size: 14px; /* Font size */
+        transition: width 0.2s ease; /* Smooth transition for resizing */
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <nav class="navbar navbar-inverse" style="padding-left:130px;">
+        <ul class="nav navbar-nav">
+          <li><a href="/dashboard">Home </a></li>
+          <li><a href="/dashboard">equipments </a></li>
+          <li class="active"><a href="/cart">cart</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <div class="container">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th class="text-center">equipment name</th>
+            <th class="text-center">quantity</th>
+          </tr>
+        </thead>
+        <tbody id="tbody">
+          {{#combinedCart}}
+            <tr>
+              <td class="text-center">{{equipment_name}}</td>
+              <td class="text-center">
+                <input type="text" class="quantity-input" value="{{quantity}}" required>
+                <input id="UQid" name="submit" type="button" value="update quantity" class="btn btn-success btn-sm" data-id="{{cart_id}}">
+              </td>
+              <td class="text-center">
+                <button id="{{cart_id}}" class="btn btn-danger remove" type="button">Delete</button>
+              </td>           
+            </tr>
+          {{/combinedCart}}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Hidden span to measure the text length -->
+    <span id="inputTextHelper" class="input-text-helper"></span>
+
+    <script>
+      $(document).ready(function() {
+        // Function to adjust the input field's width based on its text length
+        $('input[type="text"]').each(function () {
+          var initialValue = $(this).val(); // Get the initial value of the input
+          var helper = $('#inputTextHelper');
+          
+          // Set the helper span text to the current value of the input
+          helper.text(initialValue);
+          
+          // Set the input width to match the width of the span
+          $(this).css('width', helper.width() + 20 + 'px'); // Adding some padding for comfort
+        });
+
+        // Dynamically adjust the width of the input as the user types
+        $('input[type="text"]').on('input', function () {
+          var text = $(this).val();
+          var helper = $('#inputTextHelper');
+          
+          // Set the helper span text to the current value of the input
+          helper.text(text);
+          
+          // Set the input width to match the width of the span
+          $(this).css('width', helper.width() + 20 + 'px'); // Adding some padding for comfort
+        });
+      });
+    </script>
+  </body>
+</html>
