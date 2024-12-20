@@ -52,6 +52,9 @@ app.get('/equipments' , async (req , res) => {
 app.get('/addequipment', (req, res) => {
     res.render('addequipment'); // Ensure the file is correctly named and located in your views folder
 });
+app.get('/usermanagement', (req, res) => {
+    res.render('usermanagement'); // Ensure the file is correctly named and located in your views folder
+});
 }
 
 module.exports = {handlePrivateFrontEndView};

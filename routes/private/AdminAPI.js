@@ -46,7 +46,7 @@ function handleAdminBackendApi(app) {
       });
       app.put('/api/v1/users/:id' ,AuthorizedAdmin, async (req , res) => {
         try{
-          const {username , role} = req.body;
+          const {username , role,} = req.body;
           const query = `update "SEproject"."users"
           set username = '${username}',
           role = '${role}'

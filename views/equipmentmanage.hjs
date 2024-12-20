@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Equipment Management</title>
-    <!-- Bootstrap CSS -->
+  
     <link rel="stylesheet" href="/styles/bootstrap.min.css" />
     <link rel="stylesheet" href="/styles/style.css" />
     <script src="/js/jquery-2.2.0.min.js" type="text/javascript"></script>
@@ -12,17 +12,15 @@
     <script src="/src/equipmentmanage.js" type="text/javascript"></script>
   </head>
   <body>
-    <!-- Navigation Bar -->
     <nav class="navbar navbar-inverse">
       <ul class="nav navbar-nav">
         <li><a href="/dashboard">Home</a></li>
         <li class="active"><a href="/equipments">Equipments</a></li>
-        <li><a href="/dashboard">Users</a></li>
+        <li><a href="/usermanagement">Users</a></li>
       </ul>
     </nav>
 
     <div class="container">
-      <!-- Filter Options -->
       <div class="row">
         <div class="col-md-4">
           <label for="filter-category">Filter by Category:</label>
@@ -40,7 +38,6 @@
 
       <br/>
 
-      <!-- Equipment Table -->
       <div class="row">
         <div class="col-md-12">
           <table class="table table-striped">

@@ -60,7 +60,7 @@ $(document).ready(function () {
                             <td>
                                <button class="btn btn-info view-btn" data-id="${equipment.equipment_id}" data-toggle="modal" data-target="#equipmentModal">View</button>
                                <button class="btn btn-warning edit-btn" data-id="${equipment.equipment_id}" data-toggle="modal" data-target="#editEquipmentModal">Edit</button>
-                               <button class="btn btn-danger remove" id="${equipment.equipment_id}">Delete</button>
+                               <button class="btn btn-danger remove" data-id="${equipment.equipment_id}">Delete</button>
                             </td>
                         </tr>`
                     );
@@ -173,4 +173,23 @@ $(document).ready(function () {
         const supplierFilter = $('#filter-supplier').val();
         fetchEquipmentList(categoryFilter, supplierFilter);
     });
+     $('#equipment-list').on('click', '.remove', function () {
+        var id = $(this).data("id");
+console.log(id);
+$(this).parent().parent().remove();
+        $.ajax({
+            type: "DELETE",
+            url: "/api/v1/equipment/" + id,
+            data: { message : "deleted"},
+            success: function (data) {
+                alert("Equipment deleted successfully."); // Optional success message
+                row.remove(); 
+            },
+            error: function (error) {
+                console.error("Error Deleting equipment ", error);
+                alert(`Error Deleting equipment ${error.responseText}`);
+            }
+        });
+    });
+
 });
