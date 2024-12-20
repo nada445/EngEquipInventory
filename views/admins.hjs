@@ -12,7 +12,7 @@
           <ul class="nav navbar-nav">
             <li class="active"><a href="/dashboard">Home </a> </li>
             <li><a href="/equipments"> equipments </a></li>
-            <li><a href="/dashboard"> users </a> </li>
+            <li><a href="/usermanagement"> users </a> </li>
           </ul>
       </nav>
     </div>

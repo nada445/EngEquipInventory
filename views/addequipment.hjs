@@ -17,7 +17,7 @@
       <ul class="nav navbar-nav">
         <li><a href="/dashboard">Home</a></li>
         <li><a href="/equipments">Equipments</a></li>
-        <li><a href="/dashboard">Users</a></li>
+        <li><a href="/usermanagement">Users</a></li>
       </ul>
     </nav>
 

@@ -17,7 +17,7 @@
       <ul class="nav navbar-nav">
         <li><a href="/dashboard">Home</a></li>
         <li class="active"><a href="/equipments">Equipments</a></li>
-        <li><a href="/dashboard">Users</a></li>
+        <li><a href="/usermanagement">Users</a></li>
       </ul>
     </nav>
 
@@ -36,11 +36,6 @@
             
           </select>
         </div>
-          <div class="col-md-4"> 
-          <label for="search-equipment">Search by Equipment Name:</label> 
-          <input type="text" id="search-equipment" class="form-control" placeholder="Enter equipment name"> 
-          </div> 
-          
         <div class="col-md-4"> 
           <label for="search-equipment">Search by Equipment Name:</label> 
           <input type="text" id="search-equipment" class="form-control" placeholder="Enter equipment name"> 
