@@ -2,7 +2,7 @@ const db = require('../connectors/db');
 
 function getSessionToken(req) {
   
-  console.log("cookie",req.headers.cookie);
+
   if(!req.headers.cookie){
     return null
   }
@@ -30,7 +30,7 @@ async function getUser(req) {
   const user = await db.select('*')
     .from({ s: 'SEproject.session' })
     .where('token', sessionToken)
-    .innerJoin('SEproject.user as u', 's.userId', 'u.id')
+    .innerJoin('SEproject.users as u', 's.userId', 'u.user_id')
     .first(); 
 
   return user;  
