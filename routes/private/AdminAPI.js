@@ -247,6 +247,28 @@ ON equipments.supplier_id = suppliers.supplier_id;
         return res.status(400).send(err.message);
     }
 });
+app.get('/api/v1/users/:id', AuthorizedAdmin, async (req, res) => {
+  const userid = req.params.id;  // Get the dynamic ID from the request parameters
+  console.log(userid);
+  
+  try {
+      const result = await db.raw(`
+          SELECT * FROM "SEproject".users
+          WHERE 
+           user_id = ${userid}`);
+      
+      // Check if the image exists and convert it to base64 if available
+      if (result.rows.length > 0) {
+          const user = result.rows[0];
+          return res.status(200).json(user);
+      } else {
+          return res.status(404).send("user not found");
+      }
+  } catch (err) {
+      console.log("Error", err.message);
+      return res.status(400).send(err.message);
+  }
+});
 
 
 }
