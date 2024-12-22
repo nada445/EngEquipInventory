@@ -10,9 +10,10 @@
     <div>
       <nav class="navbar navbar-inverse" style="padding-left:130px;">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="/dashboard">Home </a> </li>
-            <li><a href="/dashboard"> equipments </a></li>
-            <li><a href="/cart"> cart</a> </li>
+               <li class="active"><a href="/dashboard">Home</a></li>
+                <li><a href="/userequipments">Equipments</a></li>
+                <li><a href="/cart">Cart</a></li>
+                <li><a href="/orders">orders</a></li>
           </ul>
       </nav>
     </div>

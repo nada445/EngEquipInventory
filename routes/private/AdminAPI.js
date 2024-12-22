@@ -61,7 +61,9 @@ function handleAdminBackendApi(app) {
       app.post('/api/v1/equipment/new', AuthorizedAdmin, upload.single('image'), async (req, res) => {
         const { equipment_name, model_number, purchase_date, quantity, status, location, category_ID, supplier_id } = req.body;
    
-        console.log(equipment_name, model_number, purchase_date, quantity, status, location, category_ID, supplier_id)
+        if (!equipment_name || !model_number || !purchase_date || !quantity || !status || !location || !category_ID || !supplier_id) {
+          return res.status(400).json({ message: "Missing required fields" });
+      }
         try {
             // Access the image binary data from req.file or set it to null
             const equipment_img = req.file ? req.file.buffer : null;
@@ -171,6 +173,7 @@ JOIN
 ON equipments.supplier_id = suppliers.supplier_id;
 `
       );
+      
       
       return res.status(200).send(result.rows);
     }catch(err){

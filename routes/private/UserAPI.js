@@ -2,6 +2,9 @@ const db = require('../../connectors/db');
 
 const {authMiddleware, AuthorizedStandardUser} = require('../../middleware/auth'); 
 const { getSessionToken, getUser} = require('../../utils/session'); 
+const multer = require('multer');
+const upload = multer({ storage: multer.memoryStorage() });  // Store files in memory
+
 function handleStandardUserBackendApi(app) {
 
       app.get('/api/v1/equipment/view',AuthorizedStandardUser ,async(req,res) => {
@@ -50,12 +53,39 @@ JOIN
             return res.status(404).send("Equipment not found.");
           }
       
-          const query = 
+          const ratings= await db
+          .select('score')
+          .from('SEproject.rating')
+          .where('equipment_id', equipment_id);
+  
+          console.log(ratings);
+  
+          var num=0;
+          for(let rating of ratings){
+            num= num+ rating.score;
+          }
+          
+          var scoresint=parseInt(num);
+          var scoreint=parseInt(score);
+          
+          var avgscore= (scoresint+scoreint)/(ratings.length + 1);
+          var avgscoreint= parseInt(avgscore);
+          //console.log(avgscoreint);
+    
+          const queryone = 
         `INSERT INTO "SEproject"."rating" (user_id, equipment_id, comment, score)
         VALUES ('${UserId}', '${equipment_id}', '${comment}', ${score});`;
   
-        const result = await db.raw(query);
+        const result = await db.raw(queryone);
       
+        const querytwo = `
+            UPDATE "SEproject"."equipments"
+            SET rating = '${avgscoreint}'
+            WHERE equipment_id = ${equipment_id};
+            `;
+            
+            const resulttwo = await db.raw(querytwo);
+  
           return res.status(200).send("rating added successfully");
         } catch (err) {
           console.error("Error adding rating:", err.message);
@@ -63,6 +93,8 @@ JOIN
         }
       }
       )
+  
+
       app.get('/api/v1/cart/view', AuthorizedStandardUser, async(req, res)=>{
 
         const User= await getUser(req);
@@ -93,6 +125,7 @@ JOIN
         if (quantity <= 0) {
           return res.status(400).send("Quantity must be greater than zero.");
         }
+      
   
         const User= await getUser(req);
         const UserId = User.user_id;
@@ -101,6 +134,7 @@ JOIN
                   const equipment = await db('SEproject.equipments')
                   .where('equipment_id', equipment_id)
                   .first();
+                  
   
                   if (!equipment) {
                   return res.status(404).send("Equipment not found.");
@@ -110,8 +144,27 @@ JOIN
                   return res.status(400).send("Requested quantity exceeds available stock.");
                   }
   
-                  const result = await db.raw(`INSERT INTO "cart" (User_id, equipment_id, quantity) 
+                  const userscart = await db('SEproject.cart')
+                  .where('user_id' , UserId)
+                  .andWhere('equipment_id', equipment_id)  // Check if the user owns the cart item
+                  .first();
+  
+                  if(!userscart){
+                  const result = await db.raw(`INSERT INTO "SEproject".cart (User_id, equipment_id, quantity) 
                   VALUES ('${UserId}' ,'${equipment_id}', '${quantity}');`);
+                  }
+  
+                  else{
+  
+                    const newquantity= userscart.quantity +1;
+  
+                  const query = `
+                  UPDATE "SEproject"."cart"
+                  SET quantity = '${newquantity}'
+                  WHERE user_ID = ${UserId} AND cart_ID = ${userscart.cart_id};
+                  `;
+                  const result = await db.raw(query);
+                  }
   
               return res.status(201).send("Equipment successfully added to the cart.");
           }
@@ -199,7 +252,6 @@ JOIN
         
       }
     )
-  
     app.post('/api/v1/order/new', AuthorizedStandardUser, async (req, res) => {
       const User= await getUser(req);
       const UserId = User.user_id;
@@ -234,7 +286,6 @@ JOIN
             .insert({ user_id: UserId })
             .returning('order_id');
           const orderId = orderIdObj.order_id;
-    
           // Step 4: Insert into equipment_order
           const equipmentOrderData = combinedCartItems.map(item => ({
             order_id: orderId,
@@ -284,14 +335,13 @@ JOIN
     }
     )
 
-
-   app.get('/api/v1/rating/:id', AuthorizedStandardUser, async (req, res)=>{
+    app.get('/api/v1/rating/:id', AuthorizedStandardUser, async (req, res)=>{
 
       const equipmentId = req.params.id;
       
       try{
 
-        const ratings = await db('SEproject.rating')
+        const ratings = await db('"SEproject".rating')
         .where('equipment_id', equipmentId) // Filter by equipment ID
         .select('user_id', 'comment', 'score'); 
 
@@ -316,7 +366,6 @@ JOIN
       }
     }
     )  
-
       
     
 }

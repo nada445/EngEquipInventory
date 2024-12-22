@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel='stylesheet' href='/styles/bootstrap.min.css' />
+    <link rel='stylesheet' href='/styles/style.css' />
+    <script src="/js/jquery-2.2.0.min.js" type="text/javascript"></script>
+    <script src="/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="/src/orders.js" type="text/javascript"></script>
+    <style>
+        input[type="text"] {
+            min-width: 30px; /* Minimum width */
+            text-align: center; /* Center-align text */
+            padding: 5px;
+            font-size: 14px; /* Font size */
+            transition: width 0.2s ease; /* Smooth transition for resizing */
+        }
+        .order-info-bar {
+            padding: 10px;
+            background-color: #dbdde0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        table {
+            margin-top: 20px;
+        }
+
+     .rating-box {
+        display: none;
+        position: absolute;
+        padding: 15px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+        z-index: 100;
+        width: 250px;
+        left: 50%;
+        transform: translateX(-50%);
+        top: 20%;
+        box-sizing: border-box; /* Ensure padding is included in width */
+    }
+
+    .rating-box select,
+    .rating-box textarea {
+        margin-bottom: 10px;
+        width: 100%; /* Make the select and textarea fit the container width */
+        box-sizing: border-box; /* Prevents overflow */
+    }
+
+    .rating-box textarea {
+        resize: vertical; /* Allow the comment box to be resized vertically only */
+    }
+    </style>
+</head>
+
+<body>
+    <div>
+        <nav class="navbar navbar-inverse" style="padding-left:130px;">
+            <ul class="nav navbar-nav">
+                <li><a href="/dashboard">Home </a></li>
+                <li><a href="/userequipments">Equipments </a></li>
+                <li><a href="/cart">Cart</a></li>
+                <li class="active"><a href="/orders">Orders</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="container">
+        {{#ordersAllDetails}}
+        <div > <!-- Margin bottom for spacing -->
+            <div class="order-info-bar"> <!-- Dark box with padding -->
+                Order ID:{{order_id}}    
+                <div id="formatted-date">Date:{{date}} </div>
+                <!-- Date display -->
+            </div>
+            <table class="table table-striped mt-2"> <!-- Margin top for spacing -->
+                <thead>
+                    <tr>
+                        <th class="text-center">Equipment Name</th>
+                        <th class="text-center">Model Number</th>
+                        <th class="text-center">Quantity</th>
+                        <th class="text-center">supplier</th>
+                        <th class="text-center">category</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody">
+                    {{#items}}
+                    <tr>
+                        <td class="text-center">{{equipment_name}}</td>
+                        <td class="text-center">{{model_number}}</td>
+                        <td class="text-center">{{quantity}}</td>
+                        <td class="text-center">{{supplier_name}}</td>
+                        <td class="text-center">{{category_name}}</td>
+                        <td>
+                            <input type="hidden" class="equipment-id" value="{{equipment_id}}">
+                            <button class="btn btn-warning btn-sm add-rating-btn" type="button" >Add rating</button>
+                        </td>
+                        <td>
+                        <div class="rating-box" id="rating-box-{{equipment_id}}" style="display:none;">
+                            <label for="name">name: {{equipment_name}}</label><br>
+                            <label for="id">id: {{equipment_id}}</label><br>
+                            <label for="rating">Score (0-5):</label>
+                            <select class="rating" id="rating-{{equipment_id}}" name="rating">
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select><br>
+
+                            <label for="comment">Comment:</label><br>
+                            <textarea class="comment" id="comment-{{equipment_id}}" name="comment" rows="4" cols="30"></textarea><br>
+
+                            <input type="hidden" class="equipment-id" value="{{equipment_id}}">
+                            <button class="btn btn-primary submit-rating" id="submit-rating-{{equipment_id}}">Submit Rating</button>
+                            <button class="btn btn-secondary close-rating-box" id="close-rating-{{equipment_id}}">Cancel</button>
+                        </div>
+                        </td>
+
+                                            </tr>
+                                            {{/items}}
+                                            
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <br><br>
+                                {{/ordersAllDetails}}
+                            </div>
+
+    <!-- Rating Box -->
+    <!-- Hidden span to measure the text length -->
+    <script>
+        $(document).ready(function() {
+        // When the "Add rating" button is clicked
+        $(".add-rating-btn").on("click", function() {
+            var button = $(this);  // The clicked button
+            var equipmentId = button.closest("tr").find(".equipment-id").val(); // Get the equipment id
+
+            var ratingBox = $("#rating-box-" + equipmentId);  // Get the corresponding rating box
+            var position = button.offset();  // Get the position of the button
+
+            // Set the position of the rating box to match the button's position
+            ratingBox.css({
+                "top": position.top + button.outerHeight() + 10,  // Position the box below the button
+                "left": position.left  // Align with the left edge of the button
+            });
+
+            // Show the rating box
+            ratingBox.show();
+        });
+
+        // Close the rating box
+        $(".close-rating-box").on("click", function() {
+            $(this).closest(".rating-box").hide();  // Hide the rating box
+        });
+    });
+
+        $('#rating-box').hide();
+        function formatDate(dateStr) {
+            const date = new Date(dateStr); // Convert the date string into a Date object
+
+            const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            const months = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
+
+            const dayName = days[date.getDay()];
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = months[date.getMonth()];
+            const year = date.getFullYear();
+            const hour = String(date.getHours()).padStart(2, '0');
+            const minute = String(date.getMinutes()).padStart(2, '0');
+
+            return `${dayName} ${day}/${month}/${year} ${hour}:${minute}`; // Format the date
+        }
+
+        // Apply the formatted date to the page
+        document.querySelectorAll('#formatted-date').forEach(element => {
+            const rawDate = element.innerText.replace('Date: ', ''); // Get raw date text
+            element.innerText = `Date: ${formatDate(rawDate)}`; // Set the formatted date
+        });
+        
+    </script>
+
+</body>
+</html>

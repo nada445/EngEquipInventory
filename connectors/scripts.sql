@@ -29,7 +29,7 @@ CREATE TABLE if not exists "SEproject".users (
     username TEXT NOT NULL,
     email TEXT UNIQUE NOT NULL,
     password TEXT NOT NULL, 
-    role TEXT CHECK (role IN ('admin', 'standard_user')) NOT NULL,
+    role TEXT  DEFAULT 'standard_user' CHECK (role IN ('admin', 'standard_user')), NOT NULL
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

@@ -71,6 +71,11 @@ function HandlePublicBackendApi(app){
           }
           try {
             const newUser = req.body;
+            if (! newUser.username || ! newUser.password || !newUser.email)
+            {
+              return res.status(400).send('Missing info Please complete your data'); 
+            }
+      
             newUser.password = await bcrypt.hash(newUser.password, 10);
             const user = await db('SEproject.users').insert(newUser).returning('*');
             console.log("user new",user);

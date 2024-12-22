@@ -5,7 +5,7 @@ $(document).ready(function(){
       const username = $('#name').val();
       const email = $('#email').val();
       const password = $('#password').val();
-      const role= "admin";
+      const role= "standard_user";
 
       const data = {
         username,
