@@ -20,7 +20,7 @@ $(document).ready(function() {
     });
 
     // Handling the click event for the update quantity button
-    $(".btn-success").click(function() {
+    $(".btn-warning").click(function() {
         const quantity = $(this).closest('tr').find('.quantity-input').val();
         console.log(quantity);
 
@@ -53,4 +53,29 @@ $(document).ready(function() {
             }
         });
     });
+
+    $(".btn-success").click(function() {
+        
+
+        $.ajax({
+            type: "Post", // Make sure to use PUT for updating
+            url: '/api/v1/order/new' , // Correct URL with cart_id
+            data: { }, // Send data as an object
+            success: function(serverResponse) {
+                if (serverResponse) {
+                    console.log(serverResponse);
+                    alert("Order placed successfully. ");
+                    location.href = '/cart';
+                    // Optionally reload or redirect
+                    // location.href = '/cart'; // Uncomment this to reload the cart page
+                }
+            },
+            error: function(errorResponse) {
+                if (errorResponse) {
+                    alert(`Error placing the order: ${errorResponse.responseText}`);
+                }
+            }
+        });
+    });
+
 });

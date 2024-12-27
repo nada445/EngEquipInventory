@@ -9,7 +9,7 @@ async function authMiddleware(req, res, next) {
     }
     // We then get the session of the user from our session map
     // that we set in the signinHandler
-    const userSession = await db.select('*').from('SEproject.session').where('token', sessionToken).first();
+    const userSession = await db.select('*').from('public.session').where('token', sessionToken).first();
     if (!userSession) {
       console.log("user session token is not found")
       // If the session token is not present in session map, return an unauthorized error
@@ -21,7 +21,7 @@ async function authMiddleware(req, res, next) {
       console.log("expired session");
       return res.status(301).redirect('/');
     }
-    const user = await db.select('user_id', 'role').from('SEproject.users').where('user_id', userSession.userId).first();
+    const user = await db.select('user_id', 'role').from('public.users').where('user_id', userSession.userId).first();
     
     if (!user) {
         console.log("user not found");
@@ -36,9 +36,37 @@ async function authMiddleware(req, res, next) {
     // If all checks have passed, we can consider the user authenticated
     next();
   };
+/*async function GetUser(query){
+    try{
+    const result= await db.raw(query);
 
+    return result.rows;
+    }
 
+    catch(error){
+        console.error("the user data wasn't found in the data base", error.message);
+    }
+}*/
 
+/*async function Authenticate(req, res, next){
+
+    const token= req.header('authorization');
+
+    if(!token){
+        return res.status(401).send('invailed tocken');
+    }
+
+    try{
+        decoded= JWT.verify(token, process.env.JWT_SECRET);
+        req.user= decoded;
+
+        next();
+    }
+
+    catch(EX){
+        return res.status(400).send('invalid token.');
+    }
+}*/
 
 async function AuthorizedAdmin(req, res, next){
 try {
@@ -64,4 +92,4 @@ async function AuthorizedStandardUser(req, res, next){
     
 }
 
-module.exports = {authMiddleware , AuthorizedAdmin, AuthorizedStandardUser};
+module.exports = {authMiddleware , AuthorizedAdmin, AuthorizedStandardUser, authMiddleware};
