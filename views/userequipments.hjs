@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel='stylesheet' href='/styles/bootstrap.min.css' />
+    <link rel='stylesheet' href='/styles/style.css' />
+    <script src="/js/jquery-2.2.0.min.js" type="text/javascript"></script>
+    <script src="/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="/src/userequipments.js" type="text/javascript"></script>
+    <style>
+        h3 {
+            margin: 5px 0;
+        }
+
+        p {
+            margin: 10px 0;
+            font-size: 1em;
+            color: #60120b;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: #eef4eb;
+            border-left: 5px solid #893f22;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease-in-out;
+        }
+
+        p:hover {
+            background-color: #ffdab9;
+            transform: scale(1.05);
+            color: #d64161;
+            cursor: pointer;
+        }
+
+        .filter-bar-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .filter-bar {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        #search-equipment-container {
+            flex: 2;
+            min-width: 300px;
+        }
+
+        .details-box {
+    display: none;
+    position: absolute;
+    padding: 25px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+    width: 500px; /* Increased width to make the box bigger */
+    height: auto; /* Adjusts height dynamically based on content */
+    left: 50%;
+    transform: translateX(-50%);
+    top: 10%;
+    box-sizing: border-box;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.details-box img {
+    width: 100%; /* Ensures the image fits inside the box */
+    height: auto; /* Maintains the aspect ratio */
+    display: block; /* Ensures proper layout */
+    margin-bottom: 15px; /* Adds spacing below the image */
+}
+
+.details-box select,
+.details-box textarea {
+    margin-bottom: 10px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.details-box textarea {
+    resize: vertical;
+}
+
+
+        /* Center the table */
+        .table-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .table {
+            width: 90%;
+            max-width: 1200px; /* Limits the width */
+            height: 500px;
+            overflow-y: auto;
+        }
+
+        .table th, .table td {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <div>
+        <nav class="navbar navbar-inverse" style="padding-left:130px;">
+            <ul class="nav navbar-nav">
+                <li><a href="/dashboard">Home</a></li>
+                <li class="active"><a href="/userequipments">Equipments</a></li>
+                <li><a href="/cart">Cart</a></li>
+                <li><a href="/orders">orders</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="container">
+        <div class="filter-bar-container">
+            <div class="filter-bar">
+                <div class="form-group">
+                    <label for="category-filter">Filter by Category:</label>
+                    <select id="category-filter" class="form-control">
+                        <option value="all">All Categories</option>
+                        {{#categorynames}}
+                        <option value="{{category_name}}">{{category_name}}</option>
+                        {{/categorynames}}
+                    </select>
+                </div>
+            </div>
+
+            <div class="filter-bar">
+                <div class="form-group">
+                    <label for="supplier-filter">Filter by Supplier:</label>
+                    <select id="supplier-filter" class="form-control">
+                        <option value="all">All Suppliers</option>
+                        {{#suppliernames}}
+                        <option value="{{supplier_name}}">{{supplier_name}}</option>
+                        {{/suppliernames}}
+                    </select>
+                </div>
+            </div>
+
+            <div id="search-equipment-container">
+                <div class="form-group">
+                    <label for="search-equipment">Search by Equipment Name:</label>
+                    <input type="text" id="search-equipment" class="form-control" placeholder="Enter equipment name">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Equipment Table -->
+    <div class="table-container">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Equipment Name</th>
+                    <th class="text-center">Model Number</th>
+                    <th class="text-center">Status</th>
+                    <th class="text-center">Quantity</th>
+                </tr>
+            </thead>
+            <tbody id="tbody">
+                {{#equipmentsAI}}
+                <tr data-category="{{category}}" data-supplier="{{supplier}}">
+                    <td>{{equipment_name}}</td>
+                    <td class="text-center">{{model_number}}</td>
+                    <td class="text-center">{{status}}</td>
+                    <td class="text-center">{{quantity}}</td>
+                    <td class="text-center">
+                        <input type="hidden" class="equipment-id" value="{{equipment_id}}">
+                        <button class="btn btn-success btn-sm" type="button">Add to Cart</button>
+                    </td>
+                    <td>
+                        <input type="hidden" class="equipment-id" value="{{equipment_id}}">
+                        <button class="btn btn-primary btn-sm view-details-btn" type="button">View Details</button>
+                    </td>
+                    <td>
+                        <div class="details-box" id="details-box-{{equipment_id}}" style="display:none;">
+                            <img src="{{equipment_img}}" alt="Equipment Image" width="100"><br>
+                            <label for="id">Name: {{equipment_name}}</label><br>
+                            <label for="id">Rating: {{rating}}</label><br>
+                            <label for="id">Model Number: {{model_number}}</label><br>
+                            <label for="id">Quantity: {{quantity}}</label><br>
+                            <label for="id">Status: {{status}}</label><br>
+                            <label for="id">Location: {{location}}</label><br>
+                            <label for="id">Category: {{category}}</label><br>
+                            <label for="id">Supplier: {{supplier}}</label><br>
+                            <button class="btn btn-secondary close-details-box" id="close-details-{{equipment_id}}">Close</button>
+                        </div>
+                    </td>
+                </tr>
+                {{/equipmentsAI}}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
