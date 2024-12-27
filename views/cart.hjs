@@ -16,13 +16,15 @@
       }
     </style>
   </head>
+
   <body>
     <div>
       <nav class="navbar navbar-inverse" style="padding-left:130px;">
         <ul class="nav navbar-nav">
           <li><a href="/dashboard">Home </a></li>
-          <li><a href="/dashboard">equipments </a></li>
-          <li class="active"><a href="/cart">cart</a></li>
+          <li><a href="/userequipments">Equipments </a></li>
+          <li class="active"><a href="/cart">Cart</a></li>
+          <li><a href="/orders">Orders</a></li>
         </ul>
       </nav>
     </div>
@@ -41,7 +43,7 @@
               <td class="text-center">{{equipment_name}}</td>
               <td class="text-center">
                 <input type="text" class="quantity-input" value="{{quantity}}" required>
-                <input id="UQid" name="submit" type="button" value="update quantity" class="btn btn-success btn-sm" data-id="{{cart_id}}">
+                <input id="UQid" name="submit" type="button" value="update quantity" class="btn btn-warning btn-sm" data-id="{{cart_id}}">
               </td>
               <td class="text-center">
                 <button id="{{cart_id}}" class="btn btn-danger remove" type="button">Delete</button>
@@ -50,6 +52,9 @@
           {{/combinedCart}}
         </tbody>
       </table>
+      <div class="container" >
+      <button id="orderid" class="btn btn-success btn-sm" type="button">make an order</button>
+      </div>
     </div>
 
     <!-- Hidden span to measure the text length -->
